@@ -18,8 +18,18 @@
 
 char keymap[256] = { '\0' };
 
-void keyboard_handler()
+void keyboard_handler(event* data)
 {
+	print(S("ev: "));
+	print_num((u64)data,16);
+	if (data) {
+		print(S("\nsc: "));
+		print_num(data->data.scancode,10);
+		print(S(" = "));
+		print_char(keymap[(data->data.scancode&~(1<<7)) * 2]);
+		free(data);
+	}
+	print(S("\n"));
 	str buffer = NILS;
 	usize cap = 0;
 	print(S("$ "));

@@ -12,6 +12,7 @@ void *yield(void *arg);
 
 typedef struct {
 	str name;
+	bool first;
 	void *stack_bottom;
 	void *stack;
 } thread;

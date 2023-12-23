@@ -22,8 +22,12 @@ yield:
 
 ; stack in rdi
 ; return in rsi
+; first? in rdx
 resume:
 	mov rsp, rdi
+	test rdx, rdx
+	jnz first
+normal:
 	mov rax, rsi
 
 	pop r15
@@ -34,6 +38,12 @@ resume:
 	pop rdi
 	pop rbp
 	pop rbx
+	
+	jmp after
+first:
+	mov rdi, rsi
+	add rsp, 64
+after:
 
 	;mov rdi, [rsp]
 	;mov rsi, 16

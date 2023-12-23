@@ -11,12 +11,14 @@ event_queue queue_write = { 0, 0, nil };
 
 thread *irq_services[16] = { nil };
 
-void resume(void *stack, void *ret); // yield.asm
+void resume(void *stack, void *ret, bool first); // yield.asm
 
 void thread_resume(void *ret, thread *t)
 {
 	current_thread = t;
-	resume(t->stack, ret);
+	bool first = t->first;
+	t->first = false;
+	resume(t->stack, ret, first);
 }
 
 #define STACK_SIZE 0x10000
@@ -35,6 +37,7 @@ thread *thread_create(str name, void *init)
 {
 	thread *t = malloc(sizeof *t);
 	t->name = name;
+	t->first = true;
 	t->stack = alloc_stack(&t->stack_bottom) + STACK_SIZE - 16;
 	*(void **) t->stack = init;
 	t->stack -= 8*8;
